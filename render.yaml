@@ -17,14 +17,13 @@ services:
       - key: REDIS_URL
         fromService:
           name: shortify-redis
-          type: redis
+          property: connectionString
+
+  - type: redis
+    name: shortify-redis
+    plan: free
 
 databases:
   - name: shortify-postgres
     databaseName: shortify
-    plan: free
-
-services:
-  - type: redis
-    name: shortify-redis
     plan: free
