@@ -1,16 +1,16 @@
 services:
   - type: web
     name: shortify-api
-    env: node
+    env: python
     plan: free
-    buildCommand: "npm install"
-    startCommand: "npm start"
+    rootDir: backend # your FastAPI lives here
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: ENV
         value: render
       - key: BASE_URL
-        # After first deploy, change this to your Render URL, e.g. https://shortify-api.onrender.com
-        value: https://example.com
+        value: https://example.com # change to your Render URL after first deploy
       - key: DATABASE_URL
         fromDatabase:
           name: shortify-postgres
@@ -24,9 +24,8 @@ services:
   - type: redis
     name: shortify-redis
     plan: free
-    # REQUIRED for Render Redis
     ipAllowList:
-      - source: 0.0.0.0/0 # (Permissive; works for now. Tighten later if you add static egress IPs.)
+      - source: 0.0.0.0/0 # permissive; tighten later
 
 databases:
   - name: shortify-postgres
