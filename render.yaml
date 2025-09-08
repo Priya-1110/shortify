@@ -9,6 +9,7 @@ services:
       - key: ENV
         value: render
       - key: BASE_URL
+        # After first deploy, change this to your Render URL, e.g. https://shortify-api.onrender.com
         value: https://example.com
       - key: DATABASE_URL
         fromDatabase:
@@ -16,12 +17,16 @@ services:
           property: connectionString
       - key: REDIS_URL
         fromService:
+          type: redis
           name: shortify-redis
           property: connectionString
 
   - type: redis
     name: shortify-redis
     plan: free
+    # REQUIRED for Render Redis
+    ipAllowList:
+      - source: 0.0.0.0/0 # (Permissive; works for now. Tighten later if you add static egress IPs.)
 
 databases:
   - name: shortify-postgres
